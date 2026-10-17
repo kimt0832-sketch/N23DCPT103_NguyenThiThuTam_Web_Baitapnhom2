@@ -14,29 +14,44 @@ function App() {
   // TODO 1: Viết hàm thêm công việc mới
   const handleAddTask = (e) => {
     e.preventDefault();
-    // Bổ sung logic kiểm tra rỗng, tạo object mới và cập nhật mảng tasks
-    // Nhớ reset form sau khi thêm
+    // Kiểm tra nếu tên công việc bỏ trống (sau khi loại bỏ khoảng trắng) thì dừng lại
+    if (!taskName.trim()) return;
+
+    const newTask = {
+      id: Date.now(), // Tạo id duy nhất dựa trên thời gian hiện tại
+      name: taskName.trim(),
+      priority: taskPriority,
+      completed: false,
+    };
+
+    setTasks([...tasks, newTask]); // Thêm task mới vào danh sách
+    setTaskName(''); // Reset ô nhập tên công việc
+    setTaskPriority('Thấp'); // Đưa mức độ ưu tiên về mặc định (hoặc giữ nguyên tùy bạn)
   };
 
   // TODO 2: Viết hàm đổi trạng thái hoàn thành của 1 công việc
   const handleToggleTask = (id) => {
-    // Tìm task theo id và đảo ngược giá trị completed
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   // TODO 3: Viết hàm xóa 1 công việc
   const handleDeleteTask = (id) => {
-    // Lọc bỏ task có id tương ứng
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   // TODO 4: Viết hàm xóa tất cả các công việc đã hoàn thành
   const clearCompletedTasks = () => {
-    // Lọc và giữ lại những task chưa hoàn thành
+    setTasks(tasks.filter((task) => !task.completed));
   };
 
   // TODO 5: Tính toán các con số thống kê từ mảng tasks hiện tại
-  const totalTasks = 0; // Thay thế bằng logic đếm tổng số task
-  const completedTasks = 0; // Thay thế bằng logic đếm task đã xong
-  const pendingTasks = 0; // Thay thế bằng logic đếm task chưa xong
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.completed).length;
+  const pendingTasks = totalTasks - completedTasks;
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', fontFamily: 'sans-serif' }}>
